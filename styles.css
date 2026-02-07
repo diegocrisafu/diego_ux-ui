@@ -957,165 +957,49 @@ body {
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius-lg);
     overflow: hidden;
+}
+
+#three-canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(10, 14, 23, 0.8);
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-}
-
-.viewport-content {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Grid Helper */
-.grid-helper {
-    position: absolute;
-    bottom: 30%;
-    left: 50%;
-    transform: translateX(-50%) perspective(500px) rotateX(60deg);
-    width: 300px;
-    height: 200px;
-    background-image:
-        linear-gradient(rgba(0, 217, 255, 0.1) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 217, 255, 0.1) 1px, transparent 1px);
-    background-size: 20px 20px;
-    border: 1px solid rgba(0, 217, 255, 0.2);
-    opacity: 0.6;
-    transition: opacity var(--transition-normal);
-}
-
-.grid-helper.hidden {
-    opacity: 0;
-}
-
-/* Axes Helper */
-.axes-helper {
-    position: absolute;
-    bottom: 60px;
-    left: 60px;
-    width: 60px;
-    height: 60px;
-    transition: opacity var(--transition-normal);
-}
-
-.axes-helper.hidden {
-    opacity: 0;
-}
-
-.axis {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    font-size: 0.625rem;
-    font-weight: 700;
-}
-
-.axis-x {
-    left: 0;
-    bottom: 0;
-    width: 50px;
-    height: 3px;
-    background: linear-gradient(90deg, #ef4444, transparent);
-    color: #ef4444;
-}
-
-.axis-x span {
-    position: absolute;
-    right: -12px;
-}
-
-.axis-y {
-    left: 0;
-    bottom: 0;
-    width: 3px;
-    height: 50px;
-    background: linear-gradient(0deg, #10b981, transparent);
-    color: #10b981;
-}
-
-.axis-y span {
-    position: absolute;
-    top: -14px;
-    left: -3px;
-}
-
-.axis-z {
-    left: 0;
-    bottom: 0;
-    width: 35px;
-    height: 3px;
-    background: linear-gradient(45deg, #3b82f6, transparent);
-    transform: rotate(-45deg);
-    transform-origin: left bottom;
-    color: #3b82f6;
-}
-
-.axis-z span {
-    position: absolute;
-    right: -12px;
-    top: -8px;
-}
-
-/* Demo 3D Cube */
-.demo-model {
-    perspective: 800px;
-    transform-style: preserve-3d;
-}
-
-.cube {
-    width: 150px;
-    height: 150px;
-    position: relative;
-    transform-style: preserve-3d;
-    animation: rotateCube 20s linear infinite;
-}
-
-@keyframes rotateCube {
-    from {
-        transform: rotateX(-20deg) rotateY(0deg);
-    }
-
-    to {
-        transform: rotateX(-20deg) rotateY(360deg);
-    }
-}
-
-.cube-face {
-    position: absolute;
-    width: 150px;
-    height: 150px;
-    border: 2px solid var(--accent-primary);
-    background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(14, 165, 233, 0.05));
+    gap: var(--spacing-md);
+    z-index: 10;
     backdrop-filter: blur(5px);
-    box-shadow: inset 0 0 20px rgba(0, 217, 255, 0.1);
 }
 
-.cube-face.front {
-    transform: translateZ(75px);
+.loading-overlay p {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
 }
 
-.cube-face.back {
-    transform: rotateY(180deg) translateZ(75px);
+.loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid var(--bg-tertiary);
+    border-top-color: var(--accent-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
 }
 
-.cube-face.right {
-    transform: rotateY(90deg) translateZ(75px);
-}
-
-.cube-face.left {
-    transform: rotateY(-90deg) translateZ(75px);
-}
-
-.cube-face.top {
-    transform: rotateX(90deg) translateZ(75px);
-}
-
-.cube-face.bottom {
-    transform: rotateX(-90deg) translateZ(75px);
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* Viewport Controls */
