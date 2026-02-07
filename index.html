@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Model Viewer | Professional Visualization Tool</title>
+    <meta name="description" content="Upload, visualize, and analyze 3D models with our professional web-based viewer. Supports .glb, .gltf, .obj, and .fbx formats.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                    <path d="M2 17l10 5 10-5"/>
+                    <path d="M2 12l10 5 10-5"/>
+                </svg>
+                <span class="logo-text">3D Viewer</span>
+            </div>
+        </div>
+        <div class="header-center">
+            <button class="upload-btn" id="uploadBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+                <span>Upload Model</span>
+            </button>
+        </div>
+        <div class="header-right">
+            <div class="theme-toggle">
+                <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"/>
+                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                </svg>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="themeToggle">
+                    <span class="toggle-slider"></span>
+                </label>
+                <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+                </svg>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Left Sidebar -->
+        <aside class="sidebar sidebar-left">
+            <!-- Upload Panel -->
+            <div class="panel" id="uploadPanel">
+                <div class="panel-header">
+                    <h3>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        Model Upload
+                    </h3>
+                </div>
+                <div class="panel-content">
+                    <div class="upload-zone" id="uploadZone">
+                        <div class="upload-zone-content">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
+                            <p>Drag & drop or click to upload</p>
+                            <span class="file-types">.glb  .gltf  .obj  .fbx</span>
+                        </div>
+                        <input type="file" id="fileInput" accept=".glb,.gltf,.obj,.fbx" hidden>
+                    </div>
+                    
+                    <!-- Progress Bar (hidden by default) -->
+                    <div class="progress-container" id="progressContainer">
+                        <div class="progress-info">
+                            <span class="progress-text">Loading model...</span>
+                            <span class="progress-percent" id="progressPercent">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Model Statistics Panel -->
+            <div class="panel" id="statsPanel">
+                <div class="panel-header">
+                    <h3>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                            <path d="M2 17l10 5 10-5"/>
+                            <path d="M2 12l10 5 10-5"/>
+                        </svg>
+                        Model Statistics
+                    </h3>
+                </div>
+                <div class="panel-content">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-icon vertices">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Vertices</span>
+                                <span class="stat-value" id="vertexCount">24,576</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon triangles">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="12 2 22 22 2 22"/>
+                                </svg>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Triangles</span>
+                                <span class="stat-value" id="triangleCount">15,234</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon meshes">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="7" height="7"/>
+                                    <rect x="14" y="3" width="7" height="7"/>
+                                    <rect x="14" y="14" width="7" height="7"/>
+                                    <rect x="3" y="14" width="7" height="7"/>
+                                </svg>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Meshes</span>
+                                <span class="stat-value" id="meshCount">12</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon materials">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <circle cx="12" cy="12" r="4"/>
+                                </svg>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Materials</span>
+                                <span class="stat-value" id="materialCount">8</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dimensions-box">
+                        <span class="dimensions-label">Dimensions</span>
+                        <div class="dimensions-value">
+                            <span class="dim"><strong>W</strong> 2.4m</span>
+                            <span class="dim-separator">×</span>
+                            <span class="dim"><strong>H</strong> 1.8m</span>
+                            <span class="dim-separator">×</span>
+                            <span class="dim"><strong>D</strong> 3.2m</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Analysis Panel -->
+            <div class="panel" id="perfPanel">
+                <div class="panel-header">
+                    <h3>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        Performance Analysis
+                    </h3>
+                </div>
+                <div class="panel-content">
+                    <div class="performance-gauge">
+                        <div class="gauge-circle" id="gaugeCircle">
+                            <svg viewBox="0 0 100 100">
+                                <circle class="gauge-bg" cx="50" cy="50" r="42"/>
+                                <circle class="gauge-fill" cx="50" cy="50" r="42" id="gaugeFill"/>
+                            </svg>
+                            <div class="gauge-content">
+                                <span class="gauge-score" id="perfScore">78</span>
+                                <span class="gauge-label">Score</span>
+                            </div>
+                        </div>
+                        <div class="gauge-status status-yellow" id="perfStatus">
+                            <span class="status-dot"></span>
+                            <span>Moderate</span>
+                        </div>
+                    </div>
+                    
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                            </svg>
+                            <span class="metric-value">2.5 MB</span>
+                            <span class="metric-label">File Size</span>
+                        </div>
+                        <div class="metric-card">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                <polyline points="21 15 16 10 5 21"/>
+                            </svg>
+                            <span class="metric-value">8 MB</span>
+                            <span class="metric-label">Texture Memory</span>
+                        </div>
+                        <div class="metric-card">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="12 2 22 22 2 22"/>
+                            </svg>
+                            <span class="metric-value">15,234</span>
+                            <span class="metric-label">Triangles</span>
+                        </div>
+                    </div>
+
+                    <div class="optimization-tips">
+                        <div class="tip">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="12" y1="8" x2="12" y2="12"/>
+                                <line x1="12" y1="16" x2="12.01" y2="16"/>
+                            </svg>
+                            <span>Reduce texture resolution to improve performance</span>
+                        </div>
+                        <div class="tip">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="12" y1="8" x2="12" y2="12"/>
+                                <line x1="12" y1="16" x2="12.01" y2="16"/>
+                            </svg>
+                            <span>Consider mesh decimation for large models</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 3D Viewport -->
+        <section class="viewport-container">
+            <div class="viewport" id="viewport">
+                <div class="viewport-content">
+                    <!-- 3D Canvas placeholder with demo cube -->
+                    <div class="demo-model">
+                        <div class="cube">
+                            <div class="cube-face front"></div>
+                            <div class="cube-face back"></div>
+                            <div class="cube-face right"></div>
+                            <div class="cube-face left"></div>
+                            <div class="cube-face top"></div>
+                            <div class="cube-face bottom"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Grid Helper -->
+                    <div class="grid-helper" id="gridHelper"></div>
+                    
+                    <!-- Axes Helper -->
+                    <div class="axes-helper" id="axesHelper">
+                        <div class="axis axis-x"><span>X</span></div>
+                        <div class="axis axis-y"><span>Y</span></div>
+                        <div class="axis axis-z"><span>Z</span></div>
+                    </div>
+                </div>
+                
+                <!-- Viewport Controls -->
+                <div class="viewport-controls">
+                    <label class="checkbox-control">
+                        <input type="checkbox" id="gridToggle" checked>
+                        <span class="checkbox-custom"></span>
+                        <span>Grid</span>
+                    </label>
+                    <label class="checkbox-control">
+                        <input type="checkbox" id="axesToggle" checked>
+                        <span class="checkbox-custom"></span>
+                        <span>Axes</span>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Sidebar -->
+        <aside class="sidebar sidebar-right">
+            <!-- Render Modes Panel -->
+            <div class="panel" id="renderPanel">
+                <div class="panel-header">
+                    <h3>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="3" y1="9" x2="21" y2="9"/>
+                            <line x1="9" y1="21" x2="9" y2="9"/>
+                        </svg>
+                        Render Mode
+                    </h3>
+                </div>
+                <div class="panel-content">
+                    <div class="render-modes">
+                        <button class="render-mode-btn active" data-mode="pbr" title="Default PBR">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            </svg>
+                            <span>PBR</span>
+                        </button>
+                        <button class="render-mode-btn" data-mode="wireframe" title="Wireframe">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                <path d="M2 17l10 5 10-5"/>
+                                <path d="M2 12l10 5 10-5"/>
+                            </svg>
+                            <span>Wire</span>
+                        </button>
+                        <button class="render-mode-btn" data-mode="normals" title="Normals">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 8v8"/>
+                                <path d="M8 12h8"/>
+                            </svg>
+                            <span>Normal</span>
+                        </button>
+                        <button class="render-mode-btn" data-mode="uv" title="UV Checker">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="8" height="8"/>
+                                <rect x="13" y="3" width="8" height="8"/>
+                                <rect x="3" y="13" width="8" height="8"/>
+                                <rect x="13" y="13" width="8" height="8"/>
+                            </svg>
+                            <span>UV</span>
+                        </button>
+                        <button class="render-mode-btn" data-mode="unlit" title="Unlit">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="5"/>
+                                <line x1="12" y1="1" x2="12" y2="3"/>
+                                <line x1="12" y1="21" x2="12" y2="23"/>
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                                <line x1="1" y1="12" x2="3" y2="12"/>
+                                <line x1="21" y1="12" x2="23" y2="12"/>
+                            </svg>
+                            <span>Unlit</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lighting Controls Panel -->
+            <div class="panel" id="lightingPanel">
+                <div class="panel-header">
+                    <h3>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="5"/>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                        </svg>
+                        Lighting Controls
+                    </h3>
+                </div>
+                <div class="panel-content">
+                    <!-- Main Light -->
+                    <div class="light-section">
+                        <div class="light-header">
+                            <span class="light-title">
+                                <span class="light-indicator main"></span>
+                                Main Light
+                            </span>
+                            <button class="reset-btn" id="resetMainLight" title="Reset">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/>
+                                    <path d="M3 3v5h5"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="light-controls">
+                            <div class="control-group">
+                                <label>Intensity</label>
+                                <div class="slider-container">
+                                    <input type="range" min="0" max="100" value="75" class="slider" id="mainIntensity">
+                                    <span class="slider-value" id="mainIntensityValue">75%</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label>Color</label>
+                                <div class="color-picker-wrapper">
+                                    <input type="color" value="#ffffff" class="color-picker" id="mainColor">
+                                    <span class="color-value" id="mainColorValue">#FFFFFF</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ambient Light -->
+                    <div class="light-section">
+                        <div class="light-header">
+                            <span class="light-title">
+                                <span class="light-indicator ambient"></span>
+                                Ambient Light
+                            </span>
+                            <button class="reset-btn" id="resetAmbientLight" title="Reset">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/>
+                                    <path d="M3 3v5h5"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="light-controls">
+                            <div class="control-group">
+                                <label>Intensity</label>
+                                <div class="slider-container">
+                                    <input type="range" min="0" max="100" value="40" class="slider" id="ambientIntensity">
+                                    <span class="slider-value" id="ambientIntensityValue">40%</span>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label>Color</label>
+                                <div class="color-picker-wrapper">
+                                    <input type="color" value="#b4c6e0" class="color-picker" id="ambientColor">
+                                    <span class="color-value" id="ambientColorValue">#B4C6E0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Bottom Toolbar -->
+    <footer class="bottom-toolbar">
+        <div class="camera-presets">
+            <span class="toolbar-label">Camera View:</span>
+            <div class="preset-buttons">
+                <button class="preset-btn" data-view="front" title="Front View (0°, 0°)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="4" y="4" width="16" height="16" rx="2"/>
+                    </svg>
+                    <span>Front</span>
+                </button>
+                <button class="preset-btn" data-view="side" title="Side View (90°, 0°)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                    </svg>
+                    <span>Side</span>
+                </button>
+                <button class="preset-btn" data-view="top" title="Top View (0°, 90°)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <span>Top</span>
+                </button>
+                <button class="preset-btn active" data-view="perspective" title="3/4 View (Perspective)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                    <span>3/4</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="controls-legend">
+            <div class="legend-section">
+                <span class="legend-title">Mouse</span>
+                <div class="legend-items">
+                    <span><kbd>Left Drag</kbd> Rotate</span>
+                    <span><kbd>Right Drag</kbd> Pan</span>
+                    <span><kbd>Scroll</kbd> Zoom</span>
+                </div>
+            </div>
+            <div class="legend-section">
+                <span class="legend-title">Touch</span>
+                <div class="legend-items">
+                    <span><kbd>1 Finger</kbd> Rotate</span>
+                    <span><kbd>2 Fingers</kbd> Pan</span>
+                    <span><kbd>Pinch</kbd> Zoom</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
