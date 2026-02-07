@@ -159,9 +159,16 @@ function animate() {
 // ===================================
 // Model Loading
 // ===================================
+let currentFileURL = null;
+
 function loadModel(file) {
     const fileName = file.name.toLowerCase();
-    const fileURL = URL.createObjectURL(file);
+    
+    // Revoke previous URL to prevent memory leak
+    if (currentFileURL) {
+        URL.revokeObjectURL(currentFileURL);
+    }
+    currentFileURL = URL.createObjectURL(file);
     
     // Show loading
     loadingOverlay.style.display = 'flex';
@@ -185,39 +192,40 @@ function loadModel(file) {
         loader.setDRACOLoader(dracoLoader);
         
         loader.load(
-            fileURL,
+            currentFileURL,
             (gltf) => {
                 currentModel = gltf.scene;
                 processLoadedModel(currentModel, file);
             },
             onProgress,
-            onError
+            (error) => onError(error, currentFileURL)
         );
     } else if (fileName.endsWith('.obj')) {
         loader = new OBJLoader();
         loader.load(
-            fileURL,
+            currentFileURL,
             (obj) => {
                 currentModel = obj;
                 processLoadedModel(currentModel, file);
             },
             onProgress,
-            onError
+            (error) => onError(error, currentFileURL)
         );
     } else if (fileName.endsWith('.fbx')) {
         loader = new FBXLoader();
         loader.load(
-            fileURL,
+            currentFileURL,
             (fbx) => {
                 currentModel = fbx;
                 processLoadedModel(currentModel, file);
             },
             onProgress,
-            onError
+            (error) => onError(error, currentFileURL)
         );
     } else {
-        alert('Unsupported file format. Please use .glb, .gltf, .obj, or .fbx files.');
-        loadingOverlay.style.display = 'none';
+        showError('Unsupported file format. Please use .glb, .gltf, .obj, or .fbx files.');
+        URL.revokeObjectURL(currentFileURL);
+        currentFileURL = null;
     }
 }
 
@@ -229,10 +237,29 @@ function onProgress(xhr) {
     }
 }
 
-function onError(error) {
+function onError(error, fileURL) {
     console.error('Error loading model:', error);
-    alert('Error loading model. Please try a different file.');
-    loadingOverlay.style.display = 'none';
+    const errorMessage = error.message || 'Unknown error occurred';
+    showError(`Failed to load model: ${errorMessage}`);
+    
+    // Revoke URL on error
+    if (fileURL) {
+        URL.revokeObjectURL(fileURL);
+        currentFileURL = null;
+    }
+}
+
+function showError(message) {
+    // Display error in loading overlay instead of using alert
+    loadingOverlay.style.display = 'flex';
+    loadingOverlay.querySelector('p').textContent = message;
+    loadingOverlay.querySelector('p').style.color = '#ef4444';
+    
+    // Reset after 3 seconds
+    setTimeout(() => {
+        loadingOverlay.querySelector('p').textContent = 'Drop a 3D model to view';
+        loadingOverlay.querySelector('p').style.color = '';
+    }, 3000);
 }
 
 function processLoadedModel(model, file) {
