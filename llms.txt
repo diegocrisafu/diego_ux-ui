@@ -1,0 +1,9 @@
+# CrowdFlow
+
+> An interactive crowd-flow simulation by Diego Crisafulli.
+
+- [Try the simulator](https://diegocrisafu.github.io/diego_ux-ui/)
+- [Source and model documentation](https://github.com/diegocrisafu/diego_ux-ui)
+- [Layout JSON schema](https://diegocrisafu.github.io/diego_ux-ui/crowdflow.schema.json)
+
+Synthetic educational scenarios, not a certified evacuation or life-safety tool. Comparisons use the same people, speeds, seed and starting locations.
