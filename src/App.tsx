@@ -939,7 +939,7 @@ export default function App() {
       </main>
       <footer className="site-footer">
         <span>
-          CrowdFlow <span className="footer-separator">/</span> Built by Diego Crisafulli
+          CrowdFlow <span className="footer-separator" aria-hidden="true">/</span> Built by Diego Crisafulli
         </span>
         <span><a href="https://github.com/diegocrisafu/diego_ux-ui">Source code</a> <span aria-hidden="true"> · </span> <a href="https://diegocrisafu.github.io/">Try RoomFit</a></span>
       </footer>

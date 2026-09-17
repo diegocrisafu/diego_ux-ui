@@ -532,7 +532,7 @@ main {
 }
 .controls-heading > span {
   font-size: 10px;
-  color: #68796f;
+  color: #5d7064;
 }
 .control-section + .control-section {
   border-top: 1px solid var(--line);
@@ -593,7 +593,7 @@ select {
 }
 .field-help {
   font-size: 10px;
-  color: #68796f;
+  color: #5d7064;
   line-height: 1.7;
   margin-top: 8px;
 }
@@ -623,7 +623,7 @@ input[type="range"]::-moz-range-track {
   display: flex;
   justify-content: space-between;
   font-size: 9px;
-  color: #68776d;
+  color: #5e7064;
   margin-top: 8px;
 }
 .exit-control + .exit-control {
@@ -657,7 +657,7 @@ input[type="range"]::-moz-range-track {
 }
 .exit-control-label small {
   font-size: 10px;
-  color: #68776d;
+  color: #5e7064;
   font-weight: 500;
 }
 .suggestion {
